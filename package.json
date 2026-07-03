@@ -1,0 +1,24 @@
+{
+  "name": "consultation-booking",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "src/client",
+    "src/server"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @consultation-booking/client",
+    "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client": "npm run dev --workspace @consultation-booking/client",
+    "dev:server": "npm run dev --workspace @consultation-booking/server",
+    "migrate": "npm run migrate --workspace @consultation-booking/server",
+    "start": "npm run start --workspace @consultation-booking/server",
+    "test": "npm run test --workspaces --if-present",
+    "test:client": "npm run test --workspace @consultation-booking/client",
+    "test:server": "npm run test --workspace @consultation-booking/server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
