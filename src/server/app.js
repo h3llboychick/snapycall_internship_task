@@ -1,14 +1,27 @@
 import express from "express";
+import { registerSwaggerDocs } from "./swagger.js";
+import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
+import { createBookingsRouter } from "./bookings/bookingRoutes.js";
+import { createClientsRouter } from "./clients/clientRoutes.js";
+import { createExpertsRouter } from "./experts/expertRoutes.js";
 
-const app = express();
+export function createApp({ services }) {
+  const app = express();
 
-app.use(express.json());
+  app.use(express.json());
+  registerSwaggerDocs(app);
 
-app.get("/api/health", (_request, response) => {
-  response.json({
-    status: "ok",
-    service: "consultation-booking-api"
+  app.use("/api/bookings", createBookingsRouter(services));
+  app.use("/api/clients", createClientsRouter(services))
+  app.use("/api/experts", createExpertsRouter(services))
+  app.get("/api/health", (req, resp) => {
+    resp.json({
+      status: "ok",
+      service: "consultation-booking-api"
+    });
   });
-});
 
-export default app;
+  app.use(errorHandlerMiddleware);
+
+  return app;
+}

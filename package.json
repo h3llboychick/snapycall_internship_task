@@ -13,6 +13,7 @@
     "dev:client": "npm run dev --workspace @consultation-booking/client",
     "dev:server": "npm run dev --workspace @consultation-booking/server",
     "migrate": "npm run migrate --workspace @consultation-booking/server",
+    "seed": "npm run seed --workspace @consultation-booking/server",
     "start": "npm run start --workspace @consultation-booking/server",
     "test": "npm run test --workspaces --if-present",
     "test:client": "npm run test --workspace @consultation-booking/client",

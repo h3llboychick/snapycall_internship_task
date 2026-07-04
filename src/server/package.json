@@ -4,16 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch index.js",
+    "dev": "node --watch server.js",
     "migrate": "node scripts/migrate.js",
-    "start": "node index.js",
+    "seed": "node scripts/seed.js",
+    "start": "node server.js",
     "test": "vitest run"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "pg": "^8.16.3",
-    "umzug": "^3.8.2"
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "umzug": "^3.8.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "supertest": "^7.2.2",

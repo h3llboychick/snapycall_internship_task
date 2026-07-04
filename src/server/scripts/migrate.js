@@ -1,5 +1,5 @@
 import pool from "../db/connection.js";
-import { createMigrator } from "../db/migration/migrator.js";
+import { createMigrator } from "../db/migrator.js";
 
 const migrator = createMigrator(pool);
 

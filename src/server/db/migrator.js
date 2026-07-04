@@ -1,10 +1,10 @@
 import { fileURLToPath } from "node:url";
 import { Umzug } from "umzug";
-import pool from "../connection.js";
-import { PostgresMigrationStorage } from "./postgres-storage.js";
+import pool from "./connection.js";
+import { PostgresMigrationStorage } from "./postgresStorage.js";
 
 const migrationsDirectory = fileURLToPath(
-  new URL("../migrations", import.meta.url)
+  new URL("./migrations", import.meta.url)
 );
 
 export function createMigrator(connectionPool = pool) {
