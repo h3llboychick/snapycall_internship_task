@@ -94,13 +94,13 @@ GET /api/bookings/:id
 List selectable users:
 
 ```http
-GET /api/users
+GET /api/clients
 ```
 
 List a user's bookings:
 
 ```http
-GET /api/users/:id/bookings
+GET /api/clients/:id/bookings
 ```
 
 List experts with available consultation times:
@@ -128,8 +128,20 @@ API errors use a consistent shape:
 
 ## Tests
 
+Docker must be running for the server integration tests. They start a disposable
+PostgreSQL 16 container, run all migrations against it, and remove it after the
+test suite. The application database configured in `.env` is never used.
+
+Run all tests:
+
 ```bash
 npm test
+```
+
+Run only the server integration tests:
+
+```bash
+npm run test:integration
 ```
 
 Server tests live under `src/server/tests`. Client tests live under

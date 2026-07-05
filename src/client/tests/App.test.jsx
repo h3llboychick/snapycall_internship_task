@@ -30,7 +30,7 @@ afterEach(() => {
 describe("App", () => {
   it("loads users and displays the selected user's bookings", async () => {
     const fetchMock = vi.fn(async (path) => {
-      if (path === "/api/users") {
+      if (path === "/api/clients") {
         return {
           ok: true,
           json: async () => [user]
@@ -44,7 +44,7 @@ describe("App", () => {
         };
       }
 
-      if (path === `/api/users/${user.id}/bookings`) {
+      if (path === `/api/clients/${user.id}/bookings`) {
         return {
           ok: true,
           json: async () => []
@@ -82,7 +82,7 @@ describe("App", () => {
 
     await waitFor(() => {
       expect(fetchMock).toHaveBeenCalledWith(
-        `/api/users/${user.id}/bookings`,
+        `/api/clients/${user.id}/bookings`,
         {
           signal: expect.any(AbortSignal)
         }

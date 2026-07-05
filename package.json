@@ -17,7 +17,8 @@
     "start": "npm run start --workspace @consultation-booking/server",
     "test": "npm run test --workspaces --if-present",
     "test:client": "npm run test --workspace @consultation-booking/client",
-    "test:server": "npm run test --workspace @consultation-booking/server"
+    "test:server": "npm run test --workspace @consultation-booking/server",
+    "test:integration": "npm run test:integration --workspace @consultation-booking/server"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

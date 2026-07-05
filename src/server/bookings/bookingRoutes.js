@@ -123,7 +123,7 @@ export function createBookingsRouter(services) {
   router.get("/:id", async (request, response, next) => {
     const bookingId = getBookingRequestSchema.parse(request.params.id)
     try {
-      const booking = await bookingService.getBookingById(request.params.id);
+      const booking = await bookingService.getBookingById(bookingId);
       response.json(booking);
     } catch (error) {
       next(error);

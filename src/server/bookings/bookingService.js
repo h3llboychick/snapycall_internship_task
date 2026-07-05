@@ -44,7 +44,6 @@ export class BookingService {
       // Start transaction
       await connection.query("BEGIN");
 
-      console.log(clientId, expertId, slotId)
       // Select slot for update
       const slotResult = await connection.query(
         `
