@@ -34,7 +34,7 @@ Interactive Swagger documentation is available at
 <http://localhost:3000/api/docs>. The generated OpenAPI document is available
 as JSON at <http://localhost:3000/api/docs/docs.json>.
 
-Populate the selectable users and consultation slots before using the UI:
+IMPORTANT: Populate the selectable users and consultation slots before using the app
 
 ```bash
 docker compose exec server npm run seed
