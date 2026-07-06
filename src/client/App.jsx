@@ -180,34 +180,61 @@ function App() {
       return;
     }
 
+    let booking;
+
     try {
       setSubmitting(true);
       setBookingError("");
       setBookingSuccess("");
 
-      const booking = await createBooking({
+      booking = await createBooking({
         clientId: selectedUserId,
         expertId: selectedExpertId,
         slotId: selectedSlotId
       });
+    } catch (error) {
+      setBookingError(error.message);
+      return;
+    } finally {
+      setSubmitting(false);
+    }
 
-      setBookingSuccess(`Booking ${booking.id} is confirmed.`);
-      setBookingId(booking.id);
-      setSelectedSlotId("");
+    setBookingSuccess(`Booking ${booking.id} is confirmed.`);
+    setBookingId(booking.id);
+    setSelectedSlotId("");
 
-      const [nextUsers, nextBookings, nextSlots] = await Promise.all([
+    const [usersResult, bookingsResult, slotsResult] =
+      await Promise.allSettled([
         getUsers(),
         getUserBookings(selectedUserId),
         getAvailableSlots(selectedExpertId)
       ]);
 
-      setUsers(nextUsers);
-      setBookings(nextBookings);
-      setSlots(nextSlots);
-    } catch (error) {
-      setBookingError(error.message);
-    } finally {
-      setSubmitting(false);
+    if (usersResult.status === "fulfilled") {
+      setUsers(usersResult.value);
+      setUsersError("");
+    } else {
+      setUsersError(
+        `Booking confirmed, but users could not be refreshed: ${usersResult.reason.message}`
+      );
+    }
+
+    if (bookingsResult.status === "fulfilled") {
+      setBookings(bookingsResult.value);
+      setBookingsError("");
+    } else {
+      setBookingsError(
+        `Booking confirmed, but bookings could not be refreshed: ${bookingsResult.reason.message}`
+      );
+    }
+
+    if (slotsResult.status === "fulfilled") {
+      setSlots(slotsResult.value);
+      setSlotsError("");
+    } else {
+      setSlotsError(
+        `Booking confirmed, but slots could not be refreshed: ${slotsResult.reason.message}`
+      );
     }
   }
 

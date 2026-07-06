@@ -100,6 +100,23 @@ export class BookingService {
         );
       }
 
+      const availabilityResult = await connection.query(
+        `
+          SELECT starts_at > clock_timestamp() AS "isAvailable"
+          FROM consultation_slots
+          WHERE id = $1
+        `,
+        [slotId]
+      );
+
+      if (!availabilityResult.rows[0].isAvailable) {
+        throw new BookingServiceError(
+          "SLOT_NOT_AVAILABLE",
+          "The consultation slot is no longer available.",
+          409
+        );
+      }
+
       // Subtract the credits needed for making the booking
       // Note: we don't need to explicitly lock the rows here (as we did for previous operations) because Postgres does this for us
       const balanceResult = await connection.query(

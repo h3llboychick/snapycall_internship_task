@@ -31,8 +31,8 @@ Open <http://localhost:8080>. The API health endpoint is available at
 <http://localhost:3000/api/health>.
 
 Interactive Swagger documentation is available at
-<http://localhost:3000/api-docs>. The generated OpenAPI document is available
-as JSON at <http://localhost:3000/api-docs.json>.
+<http://localhost:3000/api/docs>. The generated OpenAPI document is available
+as JSON at <http://localhost:3000/api/docs/docs.json>.
 
 Populate the selectable users and consultation slots before using the UI:
 
@@ -103,7 +103,7 @@ List a user's bookings:
 GET /api/clients/:id/bookings
 ```
 
-List experts with available consultation times:
+List experts:
 
 ```http
 GET /api/experts

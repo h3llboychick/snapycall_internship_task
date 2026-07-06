@@ -11,10 +11,10 @@ export function createExpertsRouter(services) {
    *   get:
    *     tags:
    *       - Experts
-   *     summary: List experts with available slots
+   *     summary: List experts
    *     responses:
    *       "200":
-   *         description: Experts that currently have at least one available slot.
+   *         description: All experts.
    *         content:
    *           application/json:
    *             schema:

@@ -48,7 +48,7 @@ export function createBookingsRouter(services) {
    *             schema:
    *               $ref: "#/components/schemas/Error"
    *       "409":
-   *         description: The slot has already been booked by another client.
+   *         description: The slot has already been booked or is no longer available.
    *         content:
    *           application/json:
    *             schema:

@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 
 import "@testing-library/jest-dom/vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import App from "../App.jsx";
 
@@ -23,7 +29,17 @@ const slot = {
   endsAt: "2030-01-15T09:30:00.000Z"
 };
 
+const booking = {
+  id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  clientId: user.id,
+  expertId: expert.id,
+  slotId: slot.id,
+  status: "CONFIRMED",
+  createdAt: "2026-07-06T12:00:00.000Z"
+};
+
 afterEach(() => {
+  cleanup();
   vi.unstubAllGlobals();
 });
 
@@ -100,6 +116,108 @@ describe("App", () => {
       await screen.findByRole("option", {
         name: /Jan 15, 2030/
       })
+    ).toBeInTheDocument();
+  });
+
+  it("preserves booking success and reports refresh failures independently", async () => {
+    const getCounts = new Map();
+
+    const fetchMock = vi.fn(async (path, options = {}) => {
+      if (options.method === "POST" && path === "/api/bookings") {
+        return {
+          ok: true,
+          json: async () => booking
+        };
+      }
+
+      const requestCount = (getCounts.get(path) ?? 0) + 1;
+      getCounts.set(path, requestCount);
+
+      if (path === "/api/clients" && requestCount === 1) {
+        return {
+          ok: true,
+          json: async () => [user]
+        };
+      }
+
+      if (path === "/api/experts") {
+        return {
+          ok: true,
+          json: async () => [expert]
+        };
+      }
+
+      if (
+        path === `/api/clients/${user.id}/bookings` &&
+        requestCount === 1
+      ) {
+        return {
+          ok: true,
+          json: async () => []
+        };
+      }
+
+      if (
+        path === `/api/experts/${expert.id}/slots` &&
+        requestCount === 1
+      ) {
+        return {
+          ok: true,
+          json: async () => [slot]
+        };
+      }
+
+      return {
+        ok: false,
+        status: 503,
+        json: async () => ({
+          error: {
+            code: "TEMPORARILY_UNAVAILABLE",
+            message: `Could not refresh ${path}.`
+          }
+        })
+      };
+    });
+
+    vi.stubGlobal("fetch", fetchMock);
+    render(<App />);
+
+    fireEvent.change(await screen.findByLabelText("User"), {
+      target: {
+        value: user.id
+      }
+    });
+    fireEvent.change(await screen.findByLabelText("Expert"), {
+      target: {
+        value: expert.id
+      }
+    });
+
+    const slotOption = await screen.findByRole("option", {
+      name: /Jan 15, 2030/
+    });
+    fireEvent.change(screen.getByLabelText("Available slot"), {
+      target: {
+        value: slotOption.value
+      }
+    });
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Book consultation"
+      })
+    );
+
+    expect(
+      await screen.findByText(`Booking ${booking.id} is confirmed.`)
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(/users could not be refreshed/)
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(/bookings could not be refreshed/)
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(/slots could not be refreshed/)
     ).toBeInTheDocument();
   });
 });
